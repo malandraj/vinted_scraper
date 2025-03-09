@@ -13,8 +13,7 @@ def search_vinted(query, page=1):
     """ Scraper con Selenium per estrarre gli annunci da Vinted """
     
     query_encoded = quote(query)
-    url = f"https://www.vinted.it/catalog?search_text={query_encoded}&page={page}"
-    
+    url = f"https://www.vinted.it/catalog?search_text={query_encoded}&page={page}"    
     print(f"🔎 [DEBUG] Apertura URL: {url}")
 
     # Configura il WebDriver di Chrome
@@ -23,6 +22,8 @@ def search_vinted(query, page=1):
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
+	chrome_options.binary_location = "/usr/bin/google-chrome"  # 
+Aggiunto percorso Chrome
 
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
 
