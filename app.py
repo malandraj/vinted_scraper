@@ -20,10 +20,14 @@ def search_vinted(query, page=1):
 
     # Configura il WebDriver di Chrome per Render
     chrome_options = Options()
-    chrome_options.add_argument("--headless")
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--headless")  # Esegui Chrome senza interfaccia grafica
+    chrome_options.add_argument("--no-sandbox")  # Necessario per Render
+    chrome_options.add_argument("--disable-dev-shm-usage")  # Evita errori di memoria su Render
+    chrome_options.add_argument("--disable-gpu")  # Chrome non può usare la GPU su Render
+    chrome_options.add_argument("--remote-debugging-port=9222")  # Debug porta per evitare errori
+    chrome_options.add_argument("--disable-software-rasterizer")  # Migliora la compatibilità
+    chrome_options.add_argument("--disable-setuid-sandbox")  # Evita problemi di permessi
+    chrome_options.add_argument("--single-process")  # Evita crash multipli di processi
     chrome_options.binary_location = f"{os.environ['HOME']}/chrome/chrome"
 
     try:
