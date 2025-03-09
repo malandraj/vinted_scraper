@@ -1,15 +1,29 @@
 #!/bin/bash
-echo "🔽 Installazione di Chromium su Render..."
+echo "🔽 Scaricamento di Chromium portatile su Render..."
 
-# Installiamo Chromium, che è più leggero di Chrome
-apt-get update && apt-get install -y chromium-browser
+# Creiamo una cartella nella home dell'utente per Chromium
+mkdir -p $HOME/chromium
+
+# Scarichiamo Chromium portatile
+wget -O $HOME/chromium/chromium.tar.xz https://download-chromium.appspot.com/dl/Linux_x64?type=snapshots
+
+# Controlliamo se il download è andato a buon fine
+if [ ! -f "$HOME/chromium/chromium.tar.xz" ]; then
+    echo "❌ Errore: Il download di Chromium è fallito!"
+    exit 1
+fi
+
+echo "✅ Chromium scaricato! Ora lo estraiamo..."
+
+# Estraiamo Chromium
+tar -xf $HOME/chromium/chromium.tar.xz -C $HOME/chromium/ || echo "❌ Errore: estrazione fallita"
 
 # Controlliamo se Chromium è stato installato
-if command -v chromium-browser; then
-    echo "✅ Chromium installato con successo!"
-else
+if [ ! -f "$HOME/chromium/chrome" ]; then
     echo "❌ Errore: Chromium non è stato installato correttamente!"
     exit 1
 fi
+
+echo "✅ Chromium installato in $HOME/chromium/"
 
 

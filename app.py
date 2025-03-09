@@ -28,7 +28,7 @@ def search_vinted(query, page=1):
     chrome_options.add_argument("--disable-software-rasterizer")  # Migliora la compatibilità
     chrome_options.add_argument("--disable-setuid-sandbox")  # Evita problemi di permessi
     chrome_options.add_argument("--single-process")  # Evita crash multipli di processi
-    chrome_options.binary_location = "/usr/bin/chromium-browser"
+    chrome_options.binary_location = f"{os.environ['HOME']}/chromium/chrome"
 
     try:
         driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
