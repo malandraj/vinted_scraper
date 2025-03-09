@@ -1,15 +1,19 @@
 #!/bin/bash
-echo "🔽 Scaricamento di Google Chrome portatile per Render..."
+echo "🔽 Scaricamento di Google Chrome su Render..."
 
-mkdir -p /opt/chrome
-wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O /opt/chrome/google-chrome.deb
+# Creiamo una cartella nella home dell'utente, che ha più permessi
+mkdir -p $HOME/chrome
+
+# Scarichiamo la versione portatile di Google Chrome
+wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O $HOME/chrome/google-chrome.deb
 
 echo "✅ Chrome scaricato! Ora lo estraiamo..."
 
-dpkg -x /opt/chrome/google-chrome.deb /opt/chrome/
-mv /opt/chrome/opt/google/chrome /opt/chrome/
-rm -rf /opt/chrome/opt
+# Estraiamo Chrome nella stessa cartella
+dpkg -x $HOME/chrome/google-chrome.deb $HOME/chrome/
+mv $HOME/chrome/opt/google/chrome $HOME/chrome/
+rm -rf $HOME/chrome/opt
 
-echo "✅ Google Chrome portatile installato con successo!"
+echo "✅ Google Chrome installato in $HOME/chrome/"
 
 

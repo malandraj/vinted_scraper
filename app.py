@@ -23,7 +23,7 @@ def search_vinted(query, page=1):
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
     chrome_options.add_argument("--disable-gpu")
-    chrome_options.binary_location = "/opt/chrome/chrome"
+    chrome_options.binary_location = f"{os.environ['HOME']}/chrome/chrome"
 
     try:
         driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
