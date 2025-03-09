@@ -13,27 +13,41 @@ def search_vinted(query, page=1):
     """ Scraper con Selenium per estrarre gli annunci da Vinted """
     
     query_encoded = quote(query)
-    url = f"https://www.vinted.it/catalog?search_text={query_encoded}&page={page}"    
+    url = f"https://www.vinted.it/catalog?search_text={query_encoded}&page={page}"
+    
     print(f"🔎 [DEBUG] Apertura URL: {url}")
 
-    # Configura il WebDriver di Chrome
+    # Configura il WebDriver di Chrome per Render
     chrome_options = Options()
-    chrome_options.add_argument("--headless")  # Se vuoi vedere il browser, rimuovi questa linea
-    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--headless")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--disable-gpu")
     chrome_options.binary_location = "/usr/bin/google-chrome"
 
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+    try:
+        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+        print("✅ [DEBUG] Selenium avviato con successo")
+    except Exception as e:
+        print(f"❌ [DEBUG] Errore avviando Selenium: {e}")
+        return {"error": "Errore avviando Selenium"}
 
-    # Apri la pagina di Vinted
-    driver.get(url)
-    time.sleep(5)  # Aspettiamo che la pagina carichi gli annunci
+    try:
+        driver.get(url)
+        print("✅ [DEBUG] Pagina aperta con successo")
+        time.sleep(5)  # Aspetta che la pagina carichi gli annunci
+    except Exception as e:
+        print(f"❌ [DEBUG] Errore caricando la pagina: {e}")
+        driver.quit()
+        return {"error": "Errore caricando la pagina"}
 
-    # Troviamo tutti gli annunci
-    items = driver.find_elements(By.CLASS_NAME, "new-item-box__container")
-
-    print(f"🔍 [DEBUG] Numero di annunci trovati: {len(items)}")
+    try:
+        items = driver.find_elements(By.CLASS_NAME, "new-item-box__container")
+        print(f"🔍 [DEBUG] Numero di annunci trovati: {len(items)}")
+    except Exception as e:
+        print(f"❌ [DEBUG] Errore trovando gli annunci: {e}")
+        driver.quit()
+        return {"error": "Errore trovando gli annunci"}
 
     results = []
     for item in items:
@@ -62,6 +76,7 @@ def search_vinted(query, page=1):
 
     print(f"✅ [DEBUG] Prodotti trovati: {len(results)}")
     return results
+
 
 @app.route('/search', methods=['GET'])
 def search():
