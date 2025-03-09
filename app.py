@@ -64,5 +64,10 @@ def search():
 def home():
     return jsonify({"message": "Vinted Scraper API is running with Playwright!"})
 
+import os
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    port = int(os.environ.get('PORT', 10000))  # Usa la porta di Render
+    print(f"🔍 [DEBUG] Avvio del server Flask sulla porta {port}")
+    app.run(host='0.0.0.0', port=port, debug=True)
+
