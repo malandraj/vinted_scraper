@@ -31,7 +31,10 @@ def search_vinted(query, page=1):
     chrome_options.binary_location = f"{os.environ['HOME']}/chromium/chrome-linux/chrome"
 
     try:
-        driver = webdriver.Chrome(service=Service(f"{os.environ['HOME']}/chromium/chromedriver"), options=chrome_options)
+        from webdriver_manager.chrome import ChromeDriverManager
+
+        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+
         print("✅ [DEBUG] Selenium avviato con successo")
     except Exception as e:
         print(f"❌ [DEBUG] Errore avviando Selenium: {e}")
