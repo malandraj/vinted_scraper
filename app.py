@@ -29,6 +29,7 @@ def search_vinted(query, page=1):
     chrome_options.add_argument("--disable-setuid-sandbox")  # Evita problemi di permessi
     chrome_options.add_argument("--single-process")  # Evita crash multipli di processi
     chrome_options.binary_location = f"{os.environ['HOME']}/chromium/chrome-linux/chrome"
+    print(f"🔍 [DEBUG] Chrome binary location: {chrome_options.binary_location}")
 
     try:
         from webdriver_manager.chrome import ChromeDriverManager
