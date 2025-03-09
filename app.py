@@ -33,8 +33,13 @@ def search_vinted(query, page=1):
 
     try:
         from webdriver_manager.chrome import ChromeDriverManager
+        from webdriver_manager.utils import ChromeType
 
-        driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=chrome_options)
+        driver = webdriver.Chrome(
+        service=Service(ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()),
+        options=chrome_options
+        )
+
 
         print("✅ [DEBUG] Selenium avviato con successo")
     except Exception as e:
