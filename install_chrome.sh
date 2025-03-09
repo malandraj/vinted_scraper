@@ -1,18 +1,15 @@
 #!/bin/bash
-echo "🔽 Installazione di Google Chrome su Render..."
+echo "🔽 Scaricamento di Google Chrome portatile per Render..."
 
-# Aggiungiamo le fonti di Google Chrome
-wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
-sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+mkdir -p /opt/chrome
+wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb -O /opt/chrome/google-chrome.deb
 
-# Aggiorniamo il sistema e installiamo Chrome
-apt-get update && apt-get install -y google-chrome-stable
+echo "✅ Chrome scaricato! Ora lo estraiamo..."
 
-# Verifichiamo che Chrome sia installato correttamente
-if command -v google-chrome; then
-    echo "✅ Google Chrome installato con successo!"
-else
-    echo "❌ Errore: Chrome non è stato installato correttamente!"
-    exit 1
-fi
+dpkg -x /opt/chrome/google-chrome.deb /opt/chrome/
+mv /opt/chrome/opt/google/chrome /opt/chrome/
+rm -rf /opt/chrome/opt
+
+echo "✅ Google Chrome portatile installato con successo!"
+
 
