@@ -14,12 +14,15 @@ fi
 
 echo "✅ Playwright installato correttamente!"
 
+# Creiamo una cartella locale per i browser Playwright
+export PLAYWRIGHT_BROWSERS_PATH="$HOME/.cache/ms-playwright"
+
 # Controlliamo se i browser sono già installati
-if [ -d "$HOME/.cache/ms-playwright" ]; then
+if [ -d "$PLAYWRIGHT_BROWSERS_PATH" ]; then
     echo "✅ I browser di Playwright sono già installati!"
 else
     echo "🔽 Installazione dei browser Playwright..."
-    playwright install --with-deps
+    playwright install --with-deps chromium
 fi
 
 echo "✅ Installazione completata!"
