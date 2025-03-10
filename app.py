@@ -1,13 +1,9 @@
 from playwright.sync_api import sync_playwright
-from flask import Flask, request, jsonify
-from urllib.parse import quote
-import os
-
-app = Flask(__name__)
 
 def search_vinted(query, page=1):
     """ Scraper con Playwright per estrarre gli annunci da Vinted """
-    
+
+    from urllib.parse import quote
     query_encoded = quote(query)
     url = f"https://www.vinted.it/catalog?search_text={query_encoded}&page={page}"
 
@@ -15,6 +11,7 @@ def search_vinted(query, page=1):
 
     with sync_playwright() as p:
         try:
+            print("✅ [DEBUG] Avvio di Playwright...")
             browser = p.chromium.launch(headless=True)
             print("✅ [DEBUG] Browser Playwright avviato correttamente")
 
@@ -58,30 +55,10 @@ def search_vinted(query, page=1):
                 })
 
             browser.close()
+            print(f"✅ [DEBUG] Scraping completato, prodotti trovati: {len(results)}")
 
         except Exception as e:
             print(f"❌ [DEBUG] Errore durante l'esecuzione di Playwright: {e}")
             return {"error": f"Errore Playwright: {e}"}
 
-    print(f"✅ [DEBUG] Prodotti trovati: {len(results)}")
     return results
-
-@app.route('/search', methods=['GET'])
-def search():
-    query = request.args.get('query')
-    page = request.args.get('page', 1)
-
-    if not query:
-        return jsonify({'error': 'Missing query parameter'}), 400
-
-    results = search_vinted(query, page)
-    return jsonify(results)
-
-@app.route('/')
-def home():
-    return jsonify({"message": "Vinted Scraper API is running with Playwright!"})
-
-if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 10000))  # Usa la porta di Render
-    print(f"🔍 [DEBUG] Avvio del server Flask sulla porta {port}")
-    app.run(host='0.0.0.0', port=port, debug=True)
