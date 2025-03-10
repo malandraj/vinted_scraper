@@ -1,29 +1,28 @@
 #!/bin/bash
-echo "🔽 Scaricamento di Chromium portatile su Render..."
+echo "🔽 Installazione di Google Chrome su Render..."
 
-# Creiamo una cartella per Chromium
-mkdir -p $HOME/chromium
+# Creiamo una cartella temporanea per Chrome
+mkdir -p $HOME/chrome
 
-# Scarichiamo Chromium precompilato
-wget -O $HOME/chromium/chrome-linux.zip https://download-chromium.appspot.com/dl/Linux_x64?type=snapshots
+# Scarichiamo Chrome stabile
+wget -O $HOME/chrome/google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
 
 # Controlliamo se il download è andato a buon fine
-if [ ! -f "$HOME/chromium/chrome-linux.zip" ]; then
-    echo "❌ Errore: Il download di Chromium è fallito!"
+if [ ! -f "$HOME/chrome/google-chrome.deb" ]; then
+    echo "❌ Errore: Il download di Google Chrome è fallito!"
     exit 1
 fi
 
-echo "✅ Chromium scaricato! Ora lo estraiamo..."
+echo "✅ Chrome scaricato! Ora lo estraiamo..."
 
-# Estraiamo Chromium nella stessa cartella
-unzip $HOME/chromium/chrome-linux.zip -d $HOME/chromium/ || echo "❌ Errore: estrazione fallita"
+# Estraiamo Chrome nella stessa cartella
+dpkg -x $HOME/chrome/google-chrome.deb $HOME/chrome/
 
-# Controlliamo se Chromium è stato installato
-if [ ! -f "$HOME/chromium/chrome-linux/chrome" ]; then
-    echo "❌ Errore: Chromium non è stato installato correttamente!"
+# Verifica se Chrome è stato installato
+if [ ! -f "$HOME/chrome/opt/google/chrome/chrome" ]; then
+    echo "❌ Errore: Google Chrome non è stato installato correttamente!"
     exit 1
 fi
 
-echo "✅ Chromium installato in $HOME/chromium/chrome-linux/"
-
+echo "✅ Google Chrome installato in $HOME/chrome/opt/google/chrome/"
 

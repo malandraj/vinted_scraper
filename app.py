@@ -1,9 +1,13 @@
 from playwright.sync_api import sync_playwright
+from flask import Flask, request, jsonify
+from urllib.parse import quote
+import os
+
+app = Flask(__name__)
 
 def search_vinted(query, page=1):
     """ Scraper con Playwright per estrarre gli annunci da Vinted """
 
-    from urllib.parse import quote
     query_encoded = quote(query)
     url = f"https://www.vinted.it/catalog?search_text={query_encoded}&page={page}"
 
@@ -27,18 +31,18 @@ def search_vinted(query, page=1):
             print(f"📄 [DEBUG] Primo pezzo di HTML ricevuto:\n{html_content[:1000]}")  # Stampiamo i primi 1000 caratteri
 
             # Troviamo gli annunci con il selettore CSS
-            items = page.query_selector_all(".feed-grid__item")
+            items = page.query_selector_all("div[data-testid='item-box']")  # Nuovo selettore Vinted
             print(f"🔍 [DEBUG] Numero di annunci trovati: {len(items)}")
 
             results = []
             for item in items[:10]:  # Prendiamo i primi 10 risultati
                 try:
-                    title = item.query_selector(".web_ui__Text__text").inner_text()
+                    title = item.query_selector("h2").inner_text()
                 except:
                     title = "Titolo non disponibile"
 
                 try:
-                    price = item.query_selector(".web_ui__Text__text").inner_text()
+                    price = item.query_selector("p").inner_text()
                 except:
                     price = "Prezzo non disponibile"
 
@@ -62,3 +66,23 @@ def search_vinted(query, page=1):
             return {"error": f"Errore Playwright: {e}"}
 
     return results
+
+@app.route('/search', methods=['GET'])
+def search():
+    query = request.args.get('query')
+    page = request.args.get('page', 1)
+
+    if not query:
+        return jsonify({'error': 'Missing query parameter'}), 400
+
+    results = search_vinted(query, page)
+    return jsonify(results)
+
+@app.route('/')
+def home():
+    return jsonify({"message": "Vinted Scraper API is running with Playwright!"})
+
+if __name__ == '__main__':
+    port = int(os.environ.get('PORT', 10000))  # Usa la porta di Render
+    print(f"🔍 [DEBUG] Avvio del server Flask sulla porta {port}")
+    app.run(host='0.0.0.0', port=port, debug=True)
